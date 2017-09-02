@@ -8,9 +8,6 @@ var bodyParser = require("body-parser");
 var index = require("./routes/index");
 var users = require("./routes/users");
 var app = express();
-var listener = app.listen(4242, function () {
-    console.log('Listening on port ' + listener.address().port);
-});
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(logger('dev'));
