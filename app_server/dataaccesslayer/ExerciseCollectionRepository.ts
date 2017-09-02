@@ -2,11 +2,18 @@ import { WorkoutProgram } from '../models/WorkoutProgram';
 import { Exercise } from '../models/Exercise';
 export class ExerciseCollectionRepository {
 
+    private cachedCollection: WorkoutProgram;
+
     public GetWorkoutProgram(): WorkoutProgram {
         /*TODO: MongoDB getall*/
         return this.generateMockData();
         
     }
+
+    public AddExercise(ex: Exercise) {
+        this.cachedCollection
+    }
+
     private generateMockData(): WorkoutProgram {
         let ex1: Exercise = {
             ExerciseName: "Pilates", 
@@ -28,8 +35,8 @@ export class ExerciseCollectionRepository {
         };
 
         let exerciseCollection: Exercise[] = [ex1, ex2, ex3];
-        let workoutProgram: WorkoutProgram = {ExerciseList: exerciseCollection};
-        return workoutProgram;
+        this.cachedCollection = {ExerciseList: exerciseCollection};
+        return this.cachedCollection;
     }
 
 
