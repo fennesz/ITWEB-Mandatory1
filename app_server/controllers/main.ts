@@ -4,6 +4,8 @@ export class HomeController {
     constructor() {}
 
     static index(req, res) {
-        res.render('index', { title: 'Workout Program'});
+        let array: any[];
+        array = [{Exercise: 'Bane', Description: 'Digg', Set: 'Nigger', Reps: 'Darling'}]
+        res.render('index', { title: 'Workout Program', array: array});
     };// ok
 }

@@ -12,11 +12,14 @@ block content
         b Set
       th
         b Reps/Time
-    - for (var j = 0; j < 3; j++) {
+    - for (var i = 0; i < array.length; ++i) {
       tr
-      - var array=['Coke', 'Monkey', 'Nigger', 'Darling']
-      - for (var i = 0; i < array.length; ++i) {
         td
-          p=array[i]
-      - }
+          p=array[i].Exercise
+        td
+          p=array[i].Description
+        td
+          p=array[i].Set
+        td
+          p=array[i].Reps
     - }
