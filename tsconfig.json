@@ -5,7 +5,7 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "moduleResolution": "node",
-        "types": ["node"],
+        "typeRoots": ["node_module/@types"],
         "lib": ["es2015"],
         "allowJs": true
     },

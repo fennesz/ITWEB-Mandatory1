@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "deploy": "npm install && npm start",
-    "start": "tsc && node ./bin/www",
+    "start": "tsc -v && tsc && node ./bin/www",
     "watch": "nodemon -e ts"
   },
   "engines": 
