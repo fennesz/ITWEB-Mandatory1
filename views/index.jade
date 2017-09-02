@@ -2,5 +2,20 @@ extends layout
 
 block content
   table
-  - for(x=0;x&lt;3;x++)
-    &lt;tr>&lt;td>This is a row&lt;/td>&lt;/tr>
+    tr
+      th
+        b Exercise
+      th
+        b Description
+      th
+        b Set
+      th
+        b Reps/Time
+    - for (var j = 0; j < 3; j++) {
+      tr
+      - var array=['Coke', 'Monkey', 'Nigger', 'Darling']
+      - for (var i = 0; i < array.length; ++i) {
+        td
+          p=array[i]
+      - }
+    - }
