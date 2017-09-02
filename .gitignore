@@ -18,6 +18,10 @@ app/tests/coverage/
 .idea/
 coverage/
 data
+*.exe.stackdump
+*.map
+**/bin/*
+
 
 # Sublime editor
 # ==============
@@ -50,3 +54,10 @@ mongodb.conf
 *.ntvs*
 *.njsproj
 *.sln
+
+#VSCODE
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
