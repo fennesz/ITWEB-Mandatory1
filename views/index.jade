@@ -1,5 +1,6 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}, you dumb fuck!
+  table
+  - for(x=0;x&lt;3;x++)
+    &lt;tr>&lt;td>This is a row&lt;/td>&lt;/tr>

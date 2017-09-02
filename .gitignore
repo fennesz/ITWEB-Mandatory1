@@ -20,7 +20,6 @@ coverage/
 data
 *.exe.stackdump
 *.map
-**/bin/*
 *.log
 
 
