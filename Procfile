@@ -1,1 +1,1 @@
-web: cd WEB-Mandatory1 && npm start
+web: WEB-Mandatory1/npm start
