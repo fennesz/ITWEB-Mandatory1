@@ -6,15 +6,13 @@ import { ExerciseCollectionRepository } from '../dataaccesslayer/ExerciseCollect
 export class HomeController {
 
     static index(req, res) {
-        let repository: ExerciseCollectionRepository = new ExerciseCollectionRepository();
-        let workoutProgram = repository.GetWorkoutProgram();
-
+        let workoutProgram = ExerciseCollectionRepository.GetWorkoutProgram();
         res.render('index', { title: 'Workout Program', array: workoutProgram.ExerciseList});
-    };// ok
+    };
 
     static addExercise(req, res) {
         let ex = <Exercise>req.body;
-        console.log(ex);
+        ExerciseCollectionRepository.AddExercise(ex);
         return res.redirect('/');
     }
 }

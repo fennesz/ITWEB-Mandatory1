@@ -1,5 +1,9 @@
 import { Exercise } from './Exercise';
 
-export interface WorkoutProgram {
+export class WorkoutProgram {
     ExerciseList: Exercise[];
+
+    constructor() {
+        this.ExerciseList = [];
+    }
 }

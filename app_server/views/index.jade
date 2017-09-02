@@ -10,9 +10,9 @@ block content
         th
           b Description
         th
-          b Set
-        th
           b Reps/Time
+        th
+          b Set
       - for (var i = 0; i < array.length; ++i) {
         tr
           td
@@ -20,9 +20,9 @@ block content
           td
             p=array[i].Description
           td
-            p=array[i].Sets
-          td
             p=array[i].RepsOrTime
+          td
+            p=array[i].Sets
       - }
   form(method='POST' action='/exercise/create')
     p(class='createText') Create exercise
@@ -34,16 +34,16 @@ block content
         label Sets: 
       div(class='inputDiv')
         input(type='text'
-              name='Description'
+              name='ExerciseName'
               value='data')
         input(type='text'
-              name='Sets'
+              name='Description'
               value='data')
         input(type='text'
               name='RepsOrTime'
               value='data')
         input(type='text'
-              name='ExerciseName'
+              name='Sets'
               value='data')
     div(class='submitDiv')
       input(type='submit'
