@@ -18,6 +18,7 @@ app/tests/coverage/
 .idea/
 coverage/
 data
+
 *.exe.stackdump
 *.map
 *.log
@@ -61,3 +62,7 @@ mongodb.conf
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+
+# Javascript
+*.js
