@@ -10,7 +10,7 @@ import * as users from './routes/users';
 
 var app = express();
 
-var listener = app.listen(4242, function(){
+var listener = app.listen(process.env.PORT || 4242, () => {
   console.log('Listening on port ' + listener.address().port); //Listening on port
 });
 
@@ -30,14 +30,14 @@ app.use('/', index);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   var err = new Error('Not Found');
   (<any>err).status = 404;
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
