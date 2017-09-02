@@ -21,6 +21,7 @@ data
 *.exe.stackdump
 *.map
 **/bin/*
+*.log
 
 
 # Sublime editor
