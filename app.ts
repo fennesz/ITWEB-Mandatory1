@@ -5,13 +5,13 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
-import * as index from './routes/index';
-import * as users from './routes/users';
+import * as index from './app_server/routes/index';
+import * as users from './app_server/routes/users';
 
 var app = express();
 
 // view engine setup YO
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
