@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "deploy": "npm install && npm start",
     "start": "tsc && node ./bin/www",
     "watch": "nodemon -e ts"
   },
