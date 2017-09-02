@@ -14,7 +14,7 @@ var listener = app.listen(4242, function(){
   console.log('Listening on port ' + listener.address().port); //Listening on port
 });
 
-// view engine setup
+// view engine setup YO
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
