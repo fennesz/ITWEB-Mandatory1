@@ -4,6 +4,6 @@ import {HomeController} from '../controllers/main';
 
 /* GET homepage. */
 router.get('/', HomeController.index);
-router.get('/index', HomeController.index);
+router.post('/exercise/create', HomeController.addExercise)
  
 export = router;

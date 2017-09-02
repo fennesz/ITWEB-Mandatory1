@@ -1,25 +1,51 @@
 extends layout
 
 block content
-  h1=title
-  table
-    tr
-      th
-        b Exercise
-      th
-        b Description
-      th
-        b Set
-      th
-        b Reps/Time
-    - for (var i = 0; i < array.length; ++i) {
+  div(class='mainDiv')
+    h1=title
+    table
       tr
-        td
-          p=array[i].Exercise
-        td
-          p=array[i].Description
-        td
-          p=array[i].Set
-        td
-          p=array[i].Reps
-    - }
+        th
+          b Exercise
+        th
+          b Description
+        th
+          b Set
+        th
+          b Reps/Time
+      - for (var i = 0; i < array.length; ++i) {
+        tr
+          td
+            p=array[i].ExerciseName
+          td
+            p=array[i].Description
+          td
+            p=array[i].Sets
+          td
+            p=array[i].RepsOrTime
+      - }
+  form(method='POST' action='/exercise/create')
+    p(class='createText') Create exercise
+    div(class='formContainer')
+      div(class='labelDiv')
+        label Exercise Name:
+        label Description:
+        label Reps/Time:
+        label Sets: 
+      div(class='inputDiv')
+        input(type='text'
+              name='Description'
+              value='data')
+        input(type='text'
+              name='Sets'
+              value='data')
+        input(type='text'
+              name='RepsOrTime'
+              value='data')
+        input(type='text'
+              name='ExerciseName'
+              value='data')
+    div(class='submitDiv')
+      input(type='submit'
+        value="Add exercise"
+        class="submitButton")
