@@ -10,10 +10,6 @@ import * as users from './routes/users';
 
 var app = express();
 
-var listener = app.listen(process.env.PORT || 4242, () => {
-  console.log('Listening on port ' + listener.address().port); //Listening on port
-});
-
 // view engine setup YO
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
