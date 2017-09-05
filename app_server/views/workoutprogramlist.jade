@@ -12,3 +12,11 @@ block content
           td
             a(href='/program/' + array[i]._id)= array[i].Name
       - }
+    form(method='POST' action='/workoutprograms/create')
+        label Add new workoutprogram:
+        input(type='text'
+              name='WorkoutProgramName'
+              value='HansChristian')
+        input(type='submit'
+        value="Create"
+        class="submitButton")   
