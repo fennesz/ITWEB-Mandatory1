@@ -9,7 +9,7 @@ export class WorkoutProgramController {
         let WorkoutProgram = <WorkoutProgramExerciseUpdate>req.body;
         let Done = Promise.resolve();
         if(WorkoutProgram.exercise.index == undefined) {
-            Done.then(() => this.CreateExercise(WorkoutProgram.Id, <Exercise>WorkoutProgram.exercise));
+            Done.then(() => this.CreateExercise(WorkoutProgram.Id, WorkoutProgram.exercise as Exercise));
         }
         else {
             Done.then(() => this.UpdateExercise(WorkoutProgram.Id, WorkoutProgram.exercise));
@@ -29,6 +29,6 @@ export class WorkoutProgramController {
 
     public static CreateExercise(id: string, ex: Exercise) {
         let db = MongoRepository.GetInstance<WorkoutProgram>();
-        return db.Connect("mongodb://localhost:4242").then((res) => db.Update("WorkoutPrograms", {_id: id}, {$push: {ExerciseList: ex}}));
+        return db.Update("WorkoutPrograms", {_id: id}, {$push: {ExerciseList: ex}});
     }
 }
