@@ -1,4 +1,4 @@
-import { MongoClient, Db, Collection, Cursor} from 'mongodb';
+import { MongoClient, Db, Collection, Cursor, ObjectID} from 'mongodb';
 
 export class MongoRepository<T> {
     Url: string;
@@ -44,12 +44,14 @@ export class MongoRepository<T> {
     }
 
     public Update(collectionString: string, filter: any, data: any): Promise<boolean> {
-        let collection: Collection<T> = this.Db.collection(collectionString);        
+        let collection: Collection<T> = this.Db.collection(collectionString);
+        this.FixFilter(filter);        
         return collection.updateOne(filter, data).then(res => res.result.ok == 1);
     }
 
     public Read(collectionString: string, filter: any): Promise<T[]> {
-        let collection: Collection<T> = this.Db.collection(collectionString);        
+        let collection: Collection<T> = this.Db.collection(collectionString);
+        this.FixFilter(filter);               
         return (collection.find(filter) as Cursor<T>).toArray();
     }
 
@@ -60,5 +62,12 @@ export class MongoRepository<T> {
 
     public GetAll(collectionString: string): Promise<T[]> {
         return this.Read(collectionString, {});
-    };
+    }
+
+    private FixFilter(filter: any): any{
+        if(filter["_id"]) {
+            filter["_id"] = new ObjectID(filter["_id"]);
+        }
+        return filter;
+    }
 }

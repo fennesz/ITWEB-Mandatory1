@@ -3,6 +3,7 @@ extends layout
 block content
   div(class='mainDiv')
     h1=title
+    h2=WorkoutProgramName
     table
       tr
         th
@@ -13,23 +14,20 @@ block content
           b Reps/Time
         th
           b Set
-      - for (var i = 0; i < array.length; ++i) {
+      - for (var i = 0; i < ExcerciseList.length; ++i) {
         tr
           td
-            p=array[i].ExerciseName
+            p=ExcerciseList[i].ExerciseName
           td
-            p=array[i].Description
+            p=ExcerciseList[i].Description
           td
-            p=array[i].RepsOrTime
+            p=ExcerciseList[i].RepsOrTime
           td
-            p=array[i].Sets
+            p=ExcerciseList[i].Sets
       - }
-  form(method='POST' action='/exercise/create')
+  form(method='POST' action='/program/' + WorkoutProgramId + '/exercise/create/')
     hidden(type='text'
-           name='Id'
-           value='JEG ER IKKE ET ID')
-    hidden(type='text'
-           name='exercise.index'
+           name='index'
            value='undefined')
     p(class='createText') Create exercise
     div(class='formContainer')

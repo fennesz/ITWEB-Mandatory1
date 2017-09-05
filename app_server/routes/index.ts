@@ -6,6 +6,7 @@ import {WorkoutProgramController} from '../controllers/workoutprogramcontroller'
 
 /* GET homepage. */
 router.get('/', HomeController.index);
-router.post('/exercise/create', WorkoutProgramController.addExercise)
- 
+router.get('/program/:Id', WorkoutProgramController.Index);
+router.post('/program/:Id/exercise/create', WorkoutProgramController.PostExcercise)
+
 export = router;
