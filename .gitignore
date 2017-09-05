@@ -23,6 +23,8 @@ data
 *.map
 *.log
 
+*.ini
+
 
 # Sublime editor
 # ==============

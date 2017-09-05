@@ -5,13 +5,10 @@ var path = require("path");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
-var index = require("./routes/index");
-var users = require("./routes/users");
+var index = require("./app_server/routes/index");
+var users = require("./app_server/routes/users");
 var app = express();
-var listener = app.listen(4242, function () {
-    console.log('Listening on port ' + listener.address().port);
-});
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
