@@ -8,6 +8,16 @@ import * as bodyParser from 'body-parser';
 import * as index from './app_server/routes/index';
 import * as users from './app_server/routes/users';
 
+import { MongoRepository } from './app_server/dataaccesslayer/MongoRepository';
+import { WorkoutProgram } from './app_server/models/WorkoutProgram';
+let db = new MongoRepository<WorkoutProgram>();
+db.Connect("mongodb://localhost:4242").then(res => {
+  return db.Create("WorkoutPrograms", {_id: undefined, ExerciseList: []}).then((res) => {
+    console.log(res ? "WorkoutProgram created" : "Failure");
+  });
+});
+
+
 var app = express();
 
 // view engine setup YO
