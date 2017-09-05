@@ -2,6 +2,7 @@ import { MongoClient, Db, Collection, Cursor, ObjectID} from 'mongodb';
 
 export class MongoRepository<T> {
     Url: string;
+    CollectionString: string;
     Db: Db;
 
     private static instance: any;
@@ -16,11 +17,16 @@ export class MongoRepository<T> {
 
     }
 
-    public Connect(url: string): Promise<boolean> {
+    public Connect(url: string, collectionString: string): Promise<boolean> {
         if(url == "") {
             throw new Error("url can't be empty");
         }
         this.Url = url;
+
+        if(collectionString == ""){
+            throw new Error("Collection can't be empty");
+        }
+        this.CollectionString = collectionString;
 
         if(this.Db != null) {
             this.Db.close();
@@ -35,33 +41,33 @@ export class MongoRepository<T> {
         });
     }
 
-    public Create(collectionString: string, ...data: T[]) : Promise<boolean> {
+    public Create(...data: T[]) : Promise<boolean> {
         if(data.length < 1) {
             return Promise.resolve(true);
         }
-        let collection: Collection<T> = this.Db.collection(collectionString);        
+        let collection: Collection<T> = this.Db.collection(this.CollectionString);        
         return collection.insertMany(data).then((res) => res.result.ok == 1);
     }
 
-    public Update(collectionString: string, filter: any, data: any): Promise<boolean> {
-        let collection: Collection<T> = this.Db.collection(collectionString);
+    public Update(filter: any, data: any): Promise<boolean> {
+        let collection: Collection<T> = this.Db.collection(this.CollectionString);
         this.FixFilter(filter);        
         return collection.updateOne(filter, data).then(res => res.result.ok == 1);
     }
 
-    public Read(collectionString: string, filter: any): Promise<T[]> {
-        let collection: Collection<T> = this.Db.collection(collectionString);
+    public Read(filter: any): Promise<T[]> {
+        let collection: Collection<T> = this.Db.collection(this.CollectionString);
         this.FixFilter(filter);               
         return (collection.find(filter) as Cursor<T>).toArray();
     }
 
-    public Delete(collectionString: string, objectToRemove: T): Promise<boolean> {
-        let collection: Collection<T> = this.Db.collection(collectionString);        
+    public Delete(objectToRemove: T): Promise<boolean> {
+        let collection: Collection<T> = this.Db.collection(this.CollectionString);        
         return collection.findOneAndDelete(objectToRemove).then((res) => res != null);
     }
 
-    public GetAll(collectionString: string): Promise<T[]> {
-        return this.Read(collectionString, {});
+    public GetAll(): Promise<T[]> {
+        return this.Read({});
     }
 
     private FixFilter(filter: any): any{
