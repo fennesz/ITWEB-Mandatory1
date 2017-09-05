@@ -10,13 +10,19 @@ import * as users from './app_server/routes/users';
 
 import { MongoRepository } from './app_server/dataaccesslayer/MongoRepository';
 import { WorkoutProgram } from './app_server/models/WorkoutProgram';
-let db = new MongoRepository<WorkoutProgram>();
-db.Connect("mongodb://localhost:4242").then(res => {
-  return db.Create("WorkoutPrograms", {_id: undefined, ExerciseList: []}).then((res) => {
-    console.log(res ? "WorkoutProgram created" : "Failure");
-  });
-});
-
+let db = MongoRepository.GetInstance<WorkoutProgram>();
+db.Connect("mongodb://localhost:27017")
+.then(() => {
+  let promises = [];
+  db.GetAll("WorkoutPrograms").then((res) => {
+    for(let wp of res){
+      promises.push(db.Delete("WorkoutPrograms", wp));
+    }
+    return Promise.all(promises);
+  })
+})
+.then(()=> db.Create("WorkoutPrograms", {_id: undefined, ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]}))
+.then((res) => console.log(res ? "WorkoutProgram created" : "Failure"));
 
 var app = express();
 

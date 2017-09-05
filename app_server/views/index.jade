@@ -25,6 +25,12 @@ block content
             p=array[i].Sets
       - }
   form(method='POST' action='/exercise/create')
+    hidden(type='text'
+           name='Id'
+           value='JEG ER IKKE ET ID')
+    hidden(type='text'
+           name='exercise.index'
+           value='undefined')
     p(class='createText') Create exercise
     div(class='formContainer')
       div(class='labelDiv')

@@ -3,7 +3,7 @@ import { Exercise } from '../models/Exercise';
 
 export interface WorkoutProgramExerciseUpdate{
     Id: string;
-    exercises: ExerciseDTO[];
+    exercise: ExerciseDTO;
 }
 
 export interface ExerciseDTO extends Exercise {

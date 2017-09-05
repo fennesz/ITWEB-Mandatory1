@@ -6,7 +6,9 @@ import { MongoRepository } from '../dataaccesslayer/MongoRepository';
 export class HomeController {
 
     static index(req, res) {
-        let workoutProgram = new MongoRepository<WorkoutProgram>().Read("WorkoutPrograms", {})[0];
-        res.render('index', { title: 'Workout Program', array: workoutProgram.ExerciseList});
+        MongoRepository.GetInstance<WorkoutProgram>().Read("WorkoutPrograms", {}).then((result) => {
+            console.log(result);
+            res.render('index', { title: 'Workout Program', array: result[0].ExerciseList});
+        });
     };
 }

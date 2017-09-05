@@ -4,6 +4,18 @@ export class MongoRepository<T> {
     Url: string;
     Db: Db;
 
+    private static instance: any;
+    public static GetInstance<T>(): MongoRepository<T> {
+        if(MongoRepository.instance == undefined) {
+            MongoRepository.instance = new MongoRepository<T>();
+        }
+        return MongoRepository.instance as MongoRepository<T>;
+    }
+
+    private constructor(){
+
+    }
+
     public Connect(url: string): Promise<boolean> {
         if(url == "") {
             throw new Error("url can't be empty");
