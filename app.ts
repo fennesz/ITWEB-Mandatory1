@@ -8,6 +8,7 @@ import * as bodyParser from 'body-parser';
 import * as index from './app_server/routes/index';
 import * as users from './app_server/routes/users';
 
+/*Clears database and adds initial data*/ 
 import { MongoRepository } from './app_server/dataaccesslayer/MongoRepository';
 import { WorkoutProgram } from './app_server/models/WorkoutProgram';
 let db = MongoRepository.GetInstance<WorkoutProgram>();
@@ -25,13 +26,16 @@ db.Connect("mongodb://localhost:27017")
                      {_id: undefined, Name: "Default", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]},
                      {_id: undefined, Name: "Sunday Workout", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
                                                                              {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
-                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]}
-                     {_id: undefined, Name: "Lazy Monday", ExerciseList: []}
+                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]},
+                     {_id: undefined, Name: "Lazy Monday", ExerciseList: []},
                      {_id: undefined, Name: "Freaky Friday", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
                      ]}))
-.then((res) => console.log(res ? "WorkoutProgram created" : "Failure"));
+.then((res) => console.log(res ? "WorkoutProgram created" : "Failure"))
+.then(() => {
+  db.GetAll("WorkoutPrograms").then((res) => console.log(res));
+});
 
 var app = express();
 
