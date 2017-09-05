@@ -21,7 +21,16 @@ db.Connect("mongodb://localhost:27017")
     return Promise.all(promises);
   })
 })
-.then(()=> db.Create("WorkoutPrograms", {_id: undefined, ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]}))
+.then(()=> db.Create("WorkoutPrograms", 
+                     {_id: undefined, Name: "Default", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]},
+                     {_id: undefined, Name: "Sunday Workout", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
+                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
+                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]}
+                     {_id: undefined, Name: "Lazy Monday", ExerciseList: []}
+                     {_id: undefined, Name: "Freaky Friday", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
+                                                                            {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
+                                                                            {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
+                     ]}))
 .then((res) => console.log(res ? "WorkoutProgram created" : "Failure"));
 
 var app = express();
