@@ -25,7 +25,7 @@ export function LoadConfig(): Promise<ConfigSettings> {
              return;
         }
         let path = "./conf.json";
-
+        
         fs.readFile(path, (err, data) => {
             if (err) {
                 if (err.code == "ENOENT") {
@@ -36,6 +36,8 @@ export function LoadConfig(): Promise<ConfigSettings> {
                         else {
                             console.log("File doesn't exist, creating default");
                             curConf = defaultConf;
+                            let connectionString = process.env.CONNECTION_STRING != undefined ? process.env.CONNECTION_STRING : curConf.dataBaseConnectionString;
+                            curConf.dataBaseConnectionString = connectionString;
                             resolve(CurrentConfig());
                         }
                     });
