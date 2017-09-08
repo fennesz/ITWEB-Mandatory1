@@ -12,6 +12,17 @@ import { ConfigSettings, LoadConfig } from './ConfigLoader';
 
 import { MongoRepository } from './app_server/dataaccesslayer/MongoRepository';
 import { WorkoutProgram } from './app_server/models/WorkoutProgram';
+
+function CleanDatabase<T>(db: T){
+      let promises = [];
+      db.GetAll().then((res) => {
+        for (let wp of res) {
+          promises.push(db.Delete(wp));
+        }
+        return Promise.all(promises);
+      })
+}
+
 /*Clears database and adds initial data*/
 LoadConfig("./conf.json").then((val) => {
   console.log(val);

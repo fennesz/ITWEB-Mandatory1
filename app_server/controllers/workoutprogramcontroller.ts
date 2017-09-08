@@ -1,7 +1,7 @@
 import { Exercise } from '../models/Exercise';
 import { WorkoutProgram } from '../models/WorkoutProgram';
-import { MongoRepository } from '../dataaccesslayer/MongoRepository';
-import { ExerciseDTO } from '../dataaccesslayer/ExerciseUpdateDTO';
+import { MongoRepository } from '../dataaccesslayer/implementations/MongoRepository';
+import { ExerciseDTO } from '../models/ExerciseUpdateDTO';
 /* GET homepage */
 
 export class WorkoutProgramController {
