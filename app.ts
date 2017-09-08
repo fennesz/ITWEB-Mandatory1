@@ -10,55 +10,52 @@ import * as users from './app_server/routes/users';
 
 import { ConfigSettings, LoadConfig } from './ConfigLoader';
 
-import { MongoRepository } from './app_server/dataaccesslayer/MongoRepository';
+import { MongoRepository } from './app_server/dataaccesslayer/implementations/MongoRepository';
 import { WorkoutProgram } from './app_server/models/WorkoutProgram';
+import { IMongoRepository } from './app_server/dataaccesslayer/IMongoRepository';
 
-function CleanDatabase<T>(db: T){
-      let promises = [];
-      db.GetAll().then((res) => {
-        for (let wp of res) {
-          promises.push(db.Delete(wp));
-        }
-        return Promise.all(promises);
-      })
+function CleanDatabase<T>(db: IMongoRepository<T>) {
+  let promises = [];
+  return db.GetAll().then((res) => {
+    for (let wp of res) {
+      promises.push(db.Delete(wp));
+    }
+    return Promise.all(promises);
+  }).then(() => true);
+}
+
+function InsertIntialData(db: IMongoRepository<WorkoutProgram>) {
+  return db.Create(
+    {
+      _id: undefined, Name: "Default", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 }]
+    },
+    {
+      _id: undefined, Name: "Sunday Workout", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 }]
+    },
+    { _id: undefined, Name: "Lazy Monday", ExerciseList: [] },
+    {
+      _id: undefined, Name: "Freaky Friday", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      ]
+    });
 }
 
 /*Clears database and adds initial data*/
-LoadConfig("./conf.json").then((val) => {
+LoadConfig().then((val) => {
   console.log(val);
-  console.log(process.env.NODE_ENV);
+  console.log("Current environment: " + process.env.NODE_ENV);
   process.env.NODE_ENV = "PRODUCTION";
   const ConnectionString: string = process.env.NODE_ENV ? val.dataBaseConnectionString : "mongodb://localhost:27017";
-  const Collection = "WorkoutPrograms";
+  const CollectionName = "WorkoutPrograms";
 
-  let db = MongoRepository.GetInstance<WorkoutProgram>();
-  db.Connect(ConnectionString, Collection)
-    .then(() => {
-      let promises = [];
-      db.GetAll().then((res) => {
-        for (let wp of res) {
-          promises.push(db.Delete(wp));
-        }
-        return Promise.all(promises);
-      })
-    })
-    .then(() => db.Create({ _id: undefined, Name: "Default", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 }] },
-      {
-        _id: undefined, Name: "Sunday Workout", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
-        { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
-        { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 }]
-      },
-      { _id: undefined, Name: "Lazy Monday", ExerciseList: [] },
-      {
-        _id: undefined, Name: "Freaky Friday", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
-        { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
-        { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
-        ]
-      }))
-    .then((res) => console.log(res ? "WorkoutProgram created" : "Failure"))
-    .then(() => {
-      db.GetAll().then((res) => console.log(res));
-    });
+  let db: IMongoRepository<WorkoutProgram> = new MongoRepository<WorkoutProgram>(ConnectionString, CollectionName);
+  return db.Connect()
+    .then(() => CleanDatabase(db))
+    .then(() => InsertIntialData(db))
+    .then(() => db.Disconnect());
 });
 
 var app = express();

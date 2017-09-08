@@ -1,23 +1,12 @@
 import { MongoClient, Db, Collection, Cursor, ObjectID} from 'mongodb';
+import { IMongoRepository } from '../IMongoRepository';
 
-export class MongoRepository<T> {
+export class MongoRepository<T> implements IMongoRepository<T> {
     Url: string;
     CollectionString: string;
     Db: Db;
 
-    private static instance: any;
-    public static GetInstance<T>(): MongoRepository<T> {
-        if(MongoRepository.instance == undefined) {
-            MongoRepository.instance = new MongoRepository<T>();
-        }
-        return MongoRepository.instance as MongoRepository<T>;
-    }
-
-    private constructor(){
-
-    }
-
-    public Connect(url: string, collectionString: string): Promise<boolean> {
+    constructor(url: string, collectionString: string) {
         if(url == "") {
             throw new Error("url can't be empty");
         }
@@ -27,7 +16,9 @@ export class MongoRepository<T> {
             throw new Error("Collection can't be empty");
         }
         this.CollectionString = collectionString;
+    }
 
+    public Connect(): Promise<boolean> {
         if(this.Db != null) {
             this.Db.close();
         }
@@ -39,6 +30,11 @@ export class MongoRepository<T> {
             console.log(err);
             return false;
         });
+    }
+
+    public Disconnect() {
+        this.Db.close();
+        this.Db = null;
     }
 
     public Create(...data: T[]) : Promise<boolean> {
@@ -55,7 +51,8 @@ export class MongoRepository<T> {
         return collection.updateOne(filter, data).then(res => res.result.ok == 1);
     }
 
-    public Read(filter: any): Promise<T[]> {
+    public Read(filter?: any): Promise<T[]> {
+        filter = filter != undefined ? filter : {};
         let collection: Collection<T> = this.Db.collection(this.CollectionString);
         this.FixFilter(filter);               
         return (collection.find(filter) as Cursor<T>).toArray();

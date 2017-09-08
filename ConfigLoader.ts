@@ -2,23 +2,42 @@ import * as fs from 'fs';
 
 export interface ConfigSettings {
     dataBaseConnectionString: string;
+    workoutProgramsCollection: string;
 }
 
 const defaultConf: ConfigSettings = { 
-    dataBaseConnectionString: "mongodb://localhost:27017" 
+    dataBaseConnectionString: "mongodb://localhost:27017",
+    workoutProgramsCollection: "WorkoutPrograms" 
 };
 
-export function LoadConfig(path: string): Promise<ConfigSettings> {
+let curConf: ConfigSettings = null;
+
+export function CurrentConfig(): ConfigSettings {
+    return curConf;
+}
+
+export function LoadConfig(): Promise<ConfigSettings> {
     return new Promise((resolve, reject) => {
+        if(curConf != null)
+        {
+            console.log("CurrentConf exists");
+             resolve(CurrentConfig());
+             return;
+        }
+        let path = "./conf.json";
+
         fs.readFile(path, (err, data) => {
             if (err) {
+                console.log(err);
                 if (err.code == "ENOENT") {
                     fs.writeFile(path, JSON.stringify(defaultConf), (err) => {
                         if(err){
                             throw err;
                         }
                         else {
-                            resolve(defaultConf);
+                            console.log("File doesn't exist, creating default");
+                            curConf = defaultConf;
+                            resolve(CurrentConfig());
                         }
                     });
                 }
@@ -28,7 +47,9 @@ export function LoadConfig(path: string): Promise<ConfigSettings> {
             }
             else
             {
-                return resolve(JSON.parse(data.toString())as ConfigSettings);                
+                console.log("Current conf file exists, use it");
+                curConf = JSON.parse(data.toString()) as ConfigSettings;
+                resolve(CurrentConfig());                
             }
         });
     });
