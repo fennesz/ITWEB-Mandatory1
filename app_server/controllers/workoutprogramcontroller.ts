@@ -2,34 +2,47 @@ import { Exercise } from '../models/Exercise';
 import { WorkoutProgram } from '../models/WorkoutProgram';
 import { MongoRepository } from '../dataaccesslayer/implementations/MongoRepository';
 import { ExerciseDTO } from '../models/ExerciseUpdateDTO';
+import { GetWorkoutProgramRepo } from '../../Factories'
 /* GET homepage */
 
 export class WorkoutProgramController {
     public static Index(req, res) {
-        let db = MongoRepository.GetInstance<WorkoutProgram>();
-        
-        db.Read({ _id: req.params['Id'] }).then((result) => {
-            console.log(result);
+        let db = GetWorkoutProgramRepo();
+        db.Connect()
+        .then(() => db.Read({ _id: req.params['Id'] }))
+        .then((result) => {
             if (result.length != 1) {
                 throw new Error("404 Not found");
             }
             res.render('workoutprogramview', { title: 'Workout Program', ExcerciseList: result[0].ExerciseList, WorkoutProgramName: result[0].Name, WorkoutProgramId: result[0]._id });
-            return result[0];
-        });
+        })
+        .then(() => db.Disconnect())
+    }
+
+    public static DeleteWorkoutProgram(req, res) {
+        console.log(req.params);
+        console.log({ _id: req.params['Id'] } as WorkoutProgram);
+        let db = GetWorkoutProgramRepo();
+        db.Connect()
+        .then(() => db.Delete({ _id: req.params['Id'] } as WorkoutProgram))
+        .then(() => res.redirect('/'))
+        .then(() => db.Disconnect());
     }
 
     public static PostWorkoutProgram(req, res) {
         let workoutProgam = new WorkoutProgram();
         console.log(req.body);
         workoutProgam.Name = req.body.Name;
-        let db = MongoRepository.GetInstance<WorkoutProgram>();
-        db.Create(workoutProgam).then(result => {
+        let db = GetWorkoutProgramRepo();
+        db.Connect()
+        .then(() => db.Create(workoutProgam))
+        .then(result => {
             res.redirect('/program/' + result[0])
-        });
+        })
+        .then(() => db.Disconnect());
     }
 
     public static PostExcercise(req, res) {
-        console.log(req.body);
         let Id = req.params['Id'];
         let exercise = <ExerciseDTO>req.body;
         let Done = Promise.resolve();
@@ -45,14 +58,18 @@ export class WorkoutProgramController {
     }
 
     public static UpdateExercise(id: string, ex: ExerciseDTO) {
-        let db = MongoRepository.GetInstance<WorkoutProgram>();
+        let db = GetWorkoutProgramRepo();
         let change = {};
         change["ExerciseList." + ex.index] = ex as Exercise;
-        return db.Update({ _id: id }, { $set: change });
+        return db.Connect()
+        .then(() => db.Update({ _id: id }, { $set: change }))
+        .then(() => db.Disconnect());
     }
 
     public static CreateExercise(id: string, ex: Exercise) {
-        let db = MongoRepository.GetInstance<WorkoutProgram>();
-        return db.Update({ _id: id }, { $push: { ExerciseList: ex } });
+        let db = GetWorkoutProgramRepo();
+        return db.Connect()
+        .then(() => db.Update({ _id: id }, { $push: { ExerciseList: ex } }))
+        .then(() => db.Disconnect());
     }
 }

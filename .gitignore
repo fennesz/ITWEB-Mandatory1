@@ -69,3 +69,4 @@ build/
 
 # Javascript
 *.js
+conf.json

@@ -8,7 +8,8 @@ import {WorkoutProgramController} from '../controllers/workoutprogramcontroller'
 router.get('/', HomeController.index);
 router.get('/program/:Id', WorkoutProgramController.Index);
 router.post('/program/:Id/exercise/create', WorkoutProgramController.PostExcercise)
-router.post('/workoutprograms/create', WorkoutProgramController.PostWorkoutProgram)
+router.post('/program/create', WorkoutProgramController.PostWorkoutProgram)
+router.get('/program/:Id/delete', WorkoutProgramController.DeleteWorkoutProgram)
 //router.post('/programs/create', WorkoutProgramController.PostWorkoutprogram);
  
 export = router;

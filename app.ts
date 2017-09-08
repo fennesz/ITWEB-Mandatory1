@@ -8,37 +8,55 @@ import * as bodyParser from 'body-parser';
 import * as index from './app_server/routes/index';
 import * as users from './app_server/routes/users';
 
-/*Clears database and adds initial data*/
-process.env.PROD = undefined;
-const ConnectionString: string = "mongodb://localhost:27017";
-
+import { ConfigSettings, LoadConfig } from './ConfigLoader';
 
 import { MongoRepository } from './app_server/dataaccesslayer/implementations/MongoRepository';
 import { WorkoutProgram } from './app_server/models/WorkoutProgram';
-let db = MongoRepository.GetInstance<WorkoutProgram>();
-db.Connect(ConnectionString, "ITTWEB-GRP40-ASSIGNMENT1")
-.then(() => {
+import { IMongoRepository } from './app_server/dataaccesslayer/IMongoRepository';
+
+function CleanDatabase<T>(db: IMongoRepository<T>) {
   let promises = [];
-  db.GetAll().then((res) => {
-    for(let wp of res){
+  return db.GetAll().then((res) => {
+    for (let wp of res) {
       promises.push(db.Delete(wp));
     }
     return Promise.all(promises);
-  })
-})
-.then(()=> db.Create({_id: undefined, Name: "Default", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]},
-                     {_id: undefined, Name: "Sunday Workout", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
-                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
-                                                                             {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100}]},
-                     {_id: undefined, Name: "Lazy Monday", ExerciseList: []},
-                     {_id: undefined, Name: "Freaky Friday", ExerciseList: [{Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
-                                                                            {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
-                                                                            {Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100},
-                     ]}))
-.then((res) => console.log(res ? "WorkoutProgram created" : "Failure"))
-.then(() => {
-  db.GetAll().then((res) => console.log(res));
-})
+  }).then(() => true);
+}
+
+function InsertIntialData(db: IMongoRepository<WorkoutProgram>) {
+  return db.Create(
+    {
+      _id: undefined, Name: "Default", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 }]
+    },
+    {
+      _id: undefined, Name: "Sunday Workout", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 }]
+    },
+    { _id: undefined, Name: "Lazy Monday", ExerciseList: [] },
+    {
+      _id: undefined, Name: "Freaky Friday", ExerciseList: [{ Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      { Description: "Hulla hop", ExerciseName: "Ghey", RepsOrTime: "10", Sets: 100 },
+      ]
+    });
+}
+
+/*Clears database and adds initial data*/
+LoadConfig().then((val) => {
+  console.log(val);
+  console.log("Current environment: " + process.env.NODE_ENV);
+  process.env.NODE_ENV = "PRODUCTION";
+  const ConnectionString: string = process.env.NODE_ENV ? val.dataBaseConnectionString : "mongodb://localhost:27017";
+  const CollectionName = "WorkoutPrograms";
+
+  let db: IMongoRepository<WorkoutProgram> = new MongoRepository<WorkoutProgram>(ConnectionString, CollectionName);
+  return db.Connect()
+    .then(() => CleanDatabase(db))
+    .then(() => InsertIntialData(db))
+    .then(() => db.Disconnect());
+});
 
 var app = express();
 
@@ -52,7 +70,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-console.log(path.join(__dirname, 'public'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);

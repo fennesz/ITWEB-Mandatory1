@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "outDir": "build",
         "module": "commonjs",
         "removeComments": true,
         "preserveConstEnums": true,

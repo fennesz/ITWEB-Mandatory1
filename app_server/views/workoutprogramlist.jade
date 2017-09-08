@@ -7,12 +7,16 @@ block content
       tr
         th
           b Name
+        th
+          b Action
       - for (var i = 0; i < array.length; ++i) {
         tr
           td
             a(href='/program/' + array[i]._id)= array[i].Name
+          td
+            a(href='/program/' + array[i]._id + '/delete')= "Delete"
       - }
-    form(method='POST' action='/workoutprograms/create')
+    form(method='POST' action='/program/create')
         label Add new workoutprogram:
         input(type='text'
               name='Name'
