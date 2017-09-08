@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  div(class='mainDiv')
+    h1=title
+    h2=WorkoutProgramName
+    table
+      tr
+        th
+          b Exercise
+        th
+          b Description
+        th
+          b Reps/Time
+        th
+          b Set
+      - for (var i = 0; i < ExcerciseList.length; ++i) {
+        tr
+          td
+            p=ExcerciseList[i].ExerciseName
+          td
+            p=ExcerciseList[i].Description
+          td
+            p=ExcerciseList[i].RepsOrTime
+          td
+            p=ExcerciseList[i].Sets
+      - }
+  form(method='POST' action='/program/' + WorkoutProgramId + '/exercise/create/')
+    hidden(type='text'
+           name='index'
+           value='undefined')
+    p(class='createText') Create exercise
+    div(class='formContainer')
+      div(class='labelDiv')
+        label Exercise Name:
+        label Description:
+        label Reps/Time:
+        label Sets: 
+      div(class='inputDiv')
+        input(type='text'
+              name='ExerciseName'
+              value='data')
+        input(type='text'
+              name='Description'
+              value='data')
+        input(type='text'
+              name='RepsOrTime'
+              value='data')
+        input(type='text'
+              name='Sets'
+              value='data')
+    div(class='submitDiv')
+      input(type='submit'
+        value="Add exercise"
+        class="submitButton")

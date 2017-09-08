@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  div(class='mainDiv')
+    h1=title
+    table
+      tr
+        th
+          b Name
+      - for (var i = 0; i < array.length; ++i) {
+        tr
+          td
+            a(href='/program/' + array[i]._id)= array[i].Name
+      - }
+    form(method='POST' action='/workoutprograms/create')
+        label Add new workoutprogram:
+        input(type='text'
+              name='WorkoutProgramName'
+              value='HansChristian')
+        input(type='submit'
+        value="Create"
+        class="submitButton")   
