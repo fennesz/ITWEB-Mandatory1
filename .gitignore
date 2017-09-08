@@ -65,6 +65,7 @@ mongodb.conf
 !.vscode/launch.json
 !.vscode/extensions.json
 
+build/
 
 # Javascript
 *.js
