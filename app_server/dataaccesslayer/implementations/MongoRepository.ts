@@ -41,12 +41,16 @@ export class MongoRepository<T> {
         });
     }
 
-    public Create(...data: T[]) : Promise<boolean> {
+    public Create(...data: T[]) : Promise<string[]> {
         if(data.length < 1) {
-            return Promise.resolve(true);
+            return Promise.resolve([]);
         }
         let collection: Collection<T> = this.Db.collection(this.CollectionString);        
-        return collection.insertMany(data).then((res) => res.result.ok == 1);
+        return collection.insertMany(data).then((res) => {
+            let ids: string[] = [];
+            res.insertedIds.forEach(id => ids.push(id.toString()));
+            return ids;
+        });
     }
 
     public Update(filter: any, data: any): Promise<boolean> {

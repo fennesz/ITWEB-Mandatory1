@@ -1,4 +1,3 @@
-import { WorkoutProgramDTO } from '../models/WorkoutProgramDTO';
 import { Exercise } from '../models/Exercise';
 import { WorkoutProgram } from '../models/WorkoutProgram';
 import { MongoRepository } from '../dataaccesslayer/implementations/MongoRepository';
@@ -8,7 +7,9 @@ import { ExerciseDTO } from '../models/ExerciseUpdateDTO';
 export class WorkoutProgramController {
     public static Index(req, res) {
         let db = MongoRepository.GetInstance<WorkoutProgram>();
+        
         db.Read({ _id: req.params['Id'] }).then((result) => {
+            console.log(result);
             if (result.length != 1) {
                 throw new Error("404 Not found");
             }
@@ -18,13 +19,12 @@ export class WorkoutProgramController {
     }
 
     public static PostWorkoutProgram(req, res) {
+        let workoutProgam = new WorkoutProgram();
         console.log(req.body);
-        let workoutProgam = <WorkoutProgramDTO>req.body;
+        workoutProgam.Name = req.body.Name;
         let db = MongoRepository.GetInstance<WorkoutProgram>();
-        db.Update({ _id: undefined }, { $push: req.body }).then((success) => {
-            if (success) {
-                console.log("Successfully pushed to db: " + workoutProgam);
-            }
+        db.Create(workoutProgam).then(result => {
+            res.redirect('/program/' + result[0])
         });
     }
 
