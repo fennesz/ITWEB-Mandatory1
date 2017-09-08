@@ -68,3 +68,4 @@ mongodb.conf
 
 # Javascript
 *.js
+conf.json
