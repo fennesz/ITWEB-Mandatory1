@@ -1,3 +1,4 @@
+import { WorkoutProgramDTO } from '../models/WorkoutProgramDTO';
 import { Exercise } from '../models/Exercise';
 import { WorkoutProgram } from '../models/WorkoutProgram';
 import { MongoRepository } from '../dataaccesslayer/implementations/MongoRepository';
@@ -16,11 +17,23 @@ export class WorkoutProgramController {
         });
     }
 
+    public static PostWorkoutProgram(req, res) {
+        console.log(req.body);
+        let workoutProgam = <WorkoutProgramDTO>req.body;
+        let db = MongoRepository.GetInstance<WorkoutProgram>();
+        db.Update({ _id: undefined }, { $push: req.body }).then((success) => {
+            if (success) {
+                console.log("Successfully pushed to db: " + workoutProgam);
+            }
+        });
+    }
+
     public static PostExcercise(req, res) {
         console.log(req.body);
         let Id = req.params['Id'];
         let exercise = <ExerciseDTO>req.body;
         let Done = Promise.resolve();
+        
         if (exercise.index == undefined) {
             Done.then(() => WorkoutProgramController.CreateExercise(Id, exercise as Exercise));
         }
